@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Araan Branco</title>
+	<style type="text/css">
+		.kisser {position:absolute;z-index: 1000;top:0;left:0;visibility:hidden;}
+	</style>
+	<script language="JavaScript1.2" type="text/JavaScript">
+		kisserCount = 15 //maximum number of images on screen at one time
+		curKisser = 0 //the last image DIV to be displayed (used for timer)
+		kissDelay = 1000 //duration images stay on screen (in milliseconds)
+		kissSpacer = 50 //distance to move mouse b4 next heart appears
+		theimage = "lips_small.gif" //the 1st image to be displayed
+		theimage2 = "small_heart.gif" //the 2nd image to be displayed
+		var docLayers = (document.layers) ? true:false;
+		var docId = (document.getElementById) ? true:false;
+		var docAll = (document.all) ? true:false;
+		var docbitK = (docLayers) ? "document.layers['":(docId) ? "document.getElementById('":(docAll) ? "document.all['":"document."
+		var docbitendK = (docLayers) ? "']":(docId) ? "')":(docAll) ? "']":""
+		var stylebitK = (docLayers) ? "":".style"
+		var showbitK = (docLayers) ? "show":"visible"
+		var hidebitK = (docLayers) ? "hide":"hidden"
+		var ns6=document.getElementById&&!document.all
+
+		var posX, posY, lastX, lastY, kisserCount, curKisser, kissDelay, kissSpacer, theimage
+		lastX = 0
+		lastY = 0
+
+		function doKisser(e) {
+		  posX = getMouseXPos(e)
+		  posY = getMouseYPos(e)
+		  if (posX>(lastX+kissSpacer)||posX<(lastX-kissSpacer)||posY>(lastY+kissSpacer)||posY<(lastY-kissSpacer)) {
+		    showKisser(posX,posY)
+		    lastX = posX
+		    lastY = posY
+		  }
+		}
+		function getMouseXPos(e) {
+		  if (document.layers||ns6) {
+		    return parseInt(e.pageX+10)
+		  } else {
+		    return (parseInt(event.clientX+10) + parseInt(document.body.scrollLeft))
+		  }
+		}
+		function getMouseYPos(e) {
+		  if (document.layers||ns6) {
+		    return parseInt(e.pageY)
+		  } else {
+		    return (parseInt(event.clientY) + parseInt(document.body.scrollTop))
+		  }
+		}
+		function showKisser(x,y) {
+		  var processedx=ns6? Math.min(x,window.innerWidth-75) : docAll? Math.min(x,document.body.clientWidth-55) : x
+		  if (curKisser >= kisserCount) {curKisser = 0}
+		  eval(docbitK + "kisser" + curKisser + docbitendK + stylebitK).left =  processedx + 'px'
+		  eval(docbitK + "kisser" + curKisser + docbitendK + stylebitK).top = y + 'px'
+		  eval(docbitK + "kisser" + curKisser + docbitendK + stylebitK + ".visibility = '" + showbitK + "'")
+		  if (eval("typeof(kissDelay" + curKisser + ")")=="number") {
+		    eval("clearTimeout(kissDelay" + curKisser + ")")
+		  }
+		  eval("kissDelay" + curKisser + " = setTimeout('hideKisser(" + curKisser + ")',kissDelay)")
+		  curKisser += 1
+		}
+		function hideKisser(knum) {
+		  eval(docbitK + "kisser" + knum + docbitendK + stylebitK + ".visibility = '" + hidebitK + "'")
+		}
+		function kissbegin(){
+			if (docLayers) {
+			  document.captureEvents(Event.MOUSEMOVE)
+			  document.onMouseMove = doKisser
+			} else {
+			  document.onmousemove = doKisser
+			}
+		}
+		window.onload=kissbegin
+	</script>
+</head>
+<body style="background: black">
+	<h1 style="color: white; width: 100%; text-align: center">Site em construção</h1>
+	<audio src="https://www.myinstants.com/media/sounds/careless_whispers.mp3" autoplay loop>
+		<p>Seu navegador não suporta o elemento audio </p>
+	</audio>
+	<center><img src="./img.jpg" alt="Oloko Bixo!"></center>
+	<script language="JavaScript" type="text/JavaScript">
+		if (document.all||document.getElementById||document.layers){
+			for (k=0;k<kisserCount;k=k+2) {
+			  document.write('<div id="kisser' + k + '" class="kisser"><img src="' + theimage + '" alt="" border="0"></div>\n')
+			  document.write('<div id="kisser' + (k+1) + '" class="kisser"><img src="' + theimage2 + '" alt="" border="0"></div>\n')
+			}
+		}
+	</script>
+</body>
+</html>
